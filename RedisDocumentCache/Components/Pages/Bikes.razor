@@ -1,0 +1,50 @@
+﻿@page "/Bikes"
+@using RedisDocumentCache.Models
+@using RedisDocumentCache.Services
+@inject BikeService _bikeService
+@attribute [StreamRendering]
+
+<PageTitle>Bikes</PageTitle>
+
+<h1>Bikes</h1>
+
+
+@if (bikes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Brand</th>
+                <th>Price</th>
+                <th>Model</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var bike in bikes)
+            {
+                <tr>
+                    <td>@bike.brand</td>
+                    <td>@bike.price</td>
+                    <td>@bike.model</td>
+                    <td>@bike.description</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<Bike> bikes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate asynchronous loading to demonstrate streaming rendering
+
+        bikes = await _bikeService.GetBikes();
+    }
+}

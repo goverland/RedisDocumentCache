@@ -1,0 +1,68 @@
+﻿@page "/bike/edit"
+@using RedisDocumentCache.Models
+@using RedisDocumentCache.Services
+
+@inject BikeService _bikeService
+
+@rendermode InteractiveServer
+
+<div class="header-box">
+    <input type="number" @bind="searchQuery" placeholder="Search..." />
+    <button class="btn btn-secondary" @onclick="PerformSearch">Search</button>
+</div>
+
+<EditForm Model="bike" OnValidSubmit="@HandleValidSubmit" class="col-5 p-0">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label for="id">Id:</label>
+        <InputText id="id" class="form-control" @bind-Value="bike.id" />
+    </div>
+
+    <div class="form-group">
+        <label for="model">Model:</label>
+        <InputText id="model" class="form-control" @bind-Value="bike.model"/>
+    </div>
+
+    <div class="form-group">
+        <label for="brand">Brand:</label>
+        <InputText id="brand" class="form-control" @bind-Value="bike.brand" />
+    </div>
+
+    <div class="form-group">
+        <label for="price">Price:</label>
+        <InputNumber id="price" class="form-control" @bind-Value="bike.price" />
+    </div>
+
+    <div class="form-group">
+        <label for="type">Type:</label>
+        <InputText id="type" class="form-control" @bind-Value="bike.type" />
+    </div>
+
+    <!-- Handle the Specs as needed -->
+
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <InputTextArea id="description" class="form-control" @bind-Value="bike.description" />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</EditForm>
+
+@code {
+    int searchQuery = 0;
+    Bike bike = new();
+
+    private async Task PerformSearch()
+    {
+        bike = await _bikeService.GetBikeAsync(searchQuery.ToString());
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        bike = await _bikeService.SaveBike(bike);
+    }
+}
+
+
